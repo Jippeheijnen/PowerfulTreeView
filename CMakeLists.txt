@@ -53,6 +53,7 @@ set(SOURCES
         TreeModel.cpp
         TreeNode.cpp
         TreeView.cpp
+        Dialog.cpp
 )
 
 # Define your project's header files

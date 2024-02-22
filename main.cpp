@@ -2,24 +2,22 @@
 #include <QApplication>
 #include <QStandardItemModel>
 #include <QStandardItem>
+#include <QPushButton>
+#include <QWindow>
 #include "TreeView.hpp"
+#include "Dialog.hpp"
 
 int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
 
-    TreeModel model({"1", "2", "3"});
 
-    TreeView treeView;
-    treeView.setDragEnabled(true);
-    treeView.setAcceptDrops(true);
-    treeView.setDragDropMode(QAbstractItemView::InternalMove);
-    treeView.setModel(&model);
-    model.insertRows(0, 1, treeView.currentIndex());
+    Dialog * d = new Dialog;
 
 
-    // Show the tree view
-    treeView.show();
+
+    // Show the view
+    d->show();
 
     return app.exec();
 

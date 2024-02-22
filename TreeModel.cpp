@@ -25,10 +25,10 @@ Created by Jippe Heijnen on 13-2-24.
 #include <QIODevice>
 #include <QDataStream>
 
-TreeModel::TreeModel(const QStringList &modalities, QObject *parent) : QAbstractItemModel(parent)
+TreeModel::TreeModel(QObject *parent) : QAbstractItemModel(parent)
 {
 
-    QStringList data = modalities;
+//    QStringList data = modalities;
 
 //    for (int i = 1 ; i < modalities.size() ; ++i)
 //        data.push_back(QString::fromStdString(modalities.at(i)));
@@ -36,7 +36,7 @@ TreeModel::TreeModel(const QStringList &modalities, QObject *parent) : QAbstract
     QList<QVariant> rootData;
     rootData << "Levels";
     m_rootNode = new TreeNode(rootData, 0);
-    setupModelData(data, m_rootNode);
+//    setupModelData(data, m_rootNode);
 }
 TreeModel::~TreeModel()
 {
