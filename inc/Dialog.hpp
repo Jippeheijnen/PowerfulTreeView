@@ -41,13 +41,10 @@ private:
     void createMenu();
     void createHorizontalGroupBox();
     void createGridGroupBox();
-    void createFormGroupBox();
 
 private slots:
     void addTreeItem();
     void removeTreeItem();
-    void moveTreeItemUp();
-    void moveTreeItemDown();
 
 private:
     enum { NumGridRows = 3, NumButtons = 4 };
@@ -56,14 +53,8 @@ private:
     QGroupBox *horizontalGroupBox;
     QGroupBox *gridGroupBox;
     QGroupBox *formGroupBox;
-    QTextEdit *smallEditor;
-    QTextEdit *bigEditor;
-    QLabel *labels[NumGridRows];
-    QLineEdit *lineEdits[NumGridRows];
     QPushButton * addButton;
     QPushButton * removeButton;
-    QPushButton * upButton;
-    QPushButton * downButton;
     QDialogButtonBox *buttonBox;
 
     TreeView *treeView;

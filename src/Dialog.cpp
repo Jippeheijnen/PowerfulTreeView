@@ -26,11 +26,6 @@ Dialog::Dialog()
     createMenu();
     createHorizontalGroupBox();
     createGridGroupBox();
-    createFormGroupBox();
-
-    bigEditor = new QTextEdit;
-    bigEditor->setPlainText(tr("This widget takes up all the remaining space "
-                               "in the top-level layout."));
 
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
                                      | QDialogButtonBox::Cancel);
@@ -40,16 +35,11 @@ Dialog::Dialog()
 
     connect(addButton, &QPushButton::clicked, this, &Dialog::addTreeItem);
     connect(removeButton, &QPushButton::clicked, this, &Dialog::removeTreeItem);
-    connect(upButton, &QPushButton::clicked, this, &Dialog::moveTreeItemUp);
-    connect(downButton, &QPushButton::clicked, this, &Dialog::moveTreeItemDown);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setMenuBar(menuBar);
     mainLayout->addWidget(horizontalGroupBox);
     mainLayout->addWidget(gridGroupBox);
-    mainLayout->addWidget(formGroupBox);
-    mainLayout->addWidget(bigEditor);
-    mainLayout->addWidget(buttonBox);
     QWidget *scrollAreaContent = new QWidget;
     scrollAreaContent->setLayout(mainLayout);
 
@@ -66,7 +56,7 @@ Dialog::Dialog()
     scrollLayout->addWidget(scrollArea);
 
     setLayout(scrollLayout);
-    setWindowTitle(tr("Basic Layouts"));
+    setWindowTitle(tr("Powerful TreeView"));
 }
 
 void Dialog::createMenu()
@@ -82,25 +72,21 @@ void Dialog::createMenu()
 
 void Dialog::createHorizontalGroupBox()
 {
-    horizontalGroupBox = new QGroupBox(tr("Horizontal layout"));
+    horizontalGroupBox = new QGroupBox(tr("Adding / removing rows"));
     QHBoxLayout *layout = new QHBoxLayout;
 
     addButton = new QPushButton(tr("Add"));
     removeButton = new QPushButton(tr("Remove"));
-    upButton = new QPushButton(tr("Up"));
-    downButton = new QPushButton(tr("Down"));
 
     layout->addWidget(addButton);
     layout->addWidget(removeButton);
-    layout->addWidget(upButton);
-    layout->addWidget(downButton);
 
     horizontalGroupBox->setLayout(layout);
 }
 
 void Dialog::createGridGroupBox()
 {
-    gridGroupBox = new QGroupBox(tr("Grid layout"));
+    gridGroupBox = new QGroupBox(tr("Tree View"));
     auto *layout = new QGridLayout;
 
     treeView = new TreeView;
@@ -117,16 +103,6 @@ void Dialog::createGridGroupBox()
     gridGroupBox->setLayout(layout);
 }
 
-void Dialog::createFormGroupBox()
-{
-    formGroupBox = new QGroupBox(tr("Form layout"));
-    QFormLayout *layout = new QFormLayout;
-    layout->addRow(new QLabel(tr("Line 1:")), new QLineEdit);
-    layout->addRow(new QLabel(tr("Line 2, long text:")), new QComboBox);
-    layout->addRow(new QLabel(tr("Line 3:")), new QSpinBox);
-    formGroupBox->setLayout(layout);
-}
-
 void Dialog::addTreeItem() {
     qDebug() << "Add button pressed!";
     const QModelIndex index = treeView->selectionModel()->currentIndex();
@@ -140,14 +116,3 @@ void Dialog::removeTreeItem() {
     treeView->model()->removeRow(index.row(), index.parent());
 
 }
-
-void Dialog::moveTreeItemUp() {
-    qDebug() << "Up button pressed!";
-
-}
-
-void Dialog::moveTreeItemDown() {
-    qDebug() << "Down button pressed!";
-
-}
-
