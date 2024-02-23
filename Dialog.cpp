@@ -111,7 +111,6 @@ void Dialog::createGridGroupBox()
     treeView->setAcceptDrops(true);
     treeView->setDragDropMode(QAbstractItemView::InternalMove);
     treeView->setModel(treeModel);
-    treeView->setIndentation(20);
 
     layout->addWidget(treeView, 0, 2, 4, 1);
 
@@ -134,23 +133,14 @@ void Dialog::addTreeItem() {
     const QModelIndex index = treeView->selectionModel()->currentIndex();
     QAbstractItemModel *model = treeView->model();
 
-    if (model->columnCount(index) == 0) {
-        if (!model->insertColumn(0, index))
-            return;
-    }
+//    if (model->columnCount(index) == 0) {
+//        if (!model->insertColumn(0, index))
+//            return;
+//    }
 
-    if (!model->insertRow(0, index))
-        return;
-
-    for (int column = 0; column < model->columnCount(index); ++column) {
-        const QModelIndex child = model->index(0, column, index);
-        model->setData(child, QVariant(tr("[No data]")), Qt::EditRole);
-        if (!model->headerData(column, Qt::Horizontal).isValid())
-            model->setHeaderData(column, Qt::Horizontal, QVariant(tr("[No header]")), Qt::EditRole);
-    }
-
-    treeView->selectionModel()->setCurrentIndex(model->index(0, 0, index),
-                                            QItemSelectionModel::ClearAndSelect);
+    treeView->model()->insertRow(index.row()+1, index.parent());
+//    treeView->selectionModel()->setCurrentIndex(model->index(0, 0, index),
+//                                            QItemSelectionModel::ClearAndSelect);
 
 }
 

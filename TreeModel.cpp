@@ -34,7 +34,7 @@ TreeModel::TreeModel(QStringList commodities, QObject *parent) : QAbstractItemMo
 //        data.push_back(commodities.at(i));
 
     QList<QVariant> rootData;
-    rootData << "Levels";
+    rootData << "Entries";
     m_rootNode = new TreeNode(rootData, 0);
     setupModelData(data, m_rootNode);
 }
@@ -206,6 +206,16 @@ bool TreeModel::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, i
 }
 
 bool TreeModel::insertRows(int row, int count, const QModelIndex &parent) {
+
+    TreeNode *parentItem = nodeForIndex(parent);
+    if (!parentItem)
+        return false;
+
+    beginInsertRows(parent, row, row + count - 1);
+    parentItem->insertChild(row, new TreeNode({"New Entry"}, parentItem));
+    endInsertRows();
+
+    return true;
 
 }
 

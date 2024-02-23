@@ -37,7 +37,7 @@ TreeView::TreeView()
     expandAll();
     connect(this, &QTreeView::pressed, this, &QTreeView::expandAll);
     header()->setVisible(false);
-    setIndentation(5);
+    setIndentation(15);
 }
 
 void TreeView::setModel(TreeModel *model)
