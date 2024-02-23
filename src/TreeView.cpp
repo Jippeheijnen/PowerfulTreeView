@@ -35,6 +35,7 @@ TreeView::TreeView()
     resizeColumnToContents(0);
     resize(400, 500);
     setSelectionMode(QAbstractItemView::SingleSelection);
+    setEditTriggers(DoubleClicked);
     setContextMenuPolicy(Qt::CustomContextMenu);
     expandAll();
     connect(this, &QTreeView::pressed, this, &QTreeView::expandAll);
@@ -54,6 +55,7 @@ void TreeView::setModel(TreeModel *model)
 void TreeView::customContextMenuRequested(const QPoint &pos) {
     qDebug() << "Custom contextMenu requested at: " << pos;
 
-
+    auto d = new Dialog;
+    d->show();
 
 }

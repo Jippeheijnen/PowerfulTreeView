@@ -50,7 +50,8 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role != Qt::DisplayRole)
+    if (role != Qt::DisplayRole &&
+        role != Qt::EditRole)
         return QVariant();
 
     TreeNode *node = nodeForIndex(index);
@@ -106,7 +107,7 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::ItemIsDropEnabled;
 
-    return QAbstractItemModel::flags(index)| Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+    return QAbstractItemModel::flags(index)| Qt::ItemIsEditable |Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 }
 Qt::DropActions TreeModel::supportedDropActions() const
 {
@@ -205,13 +206,13 @@ bool TreeModel::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, i
     return true;
 }
 
-bool TreeModel::insertRows(int row, int count, const QModelIndex &parent) {
+bool TreeModel::insertNode(int row, const QModelIndex &parent) {
 
     TreeNode *parentItem = nodeForIndex(parent);
     if (!parentItem)
         return false;
 
-    beginInsertRows(parent, row, row + count - 1);
+    beginInsertRows(parent, row, row);
     parentItem->insertChild(row, new TreeNode({"New Entry"}, parentItem));
     endInsertRows();
 
@@ -219,17 +220,17 @@ bool TreeModel::insertRows(int row, int count, const QModelIndex &parent) {
 
 }
 
-bool TreeModel::removeRows(int row, int count, const QModelIndex &parent) {
+bool TreeModel::removeNode(int row, const QModelIndex &parent) {
 
-//    TreeNode *parentItem = nodeForIndex(parent);
-//    if (!parentItem)
-//        return false;
-//
-//    beginRemoveRows(parent, row, row + count - 1);
-//    parentItem->removeChild(row);
-//    endRemoveRows();
-//
-//    return true;
+    TreeNode *parentItem = nodeForIndex(parent);
+    if (!parentItem)
+        return false;
+
+    beginRemoveRows(parent, row, row);
+    parentItem->removeChild(row);
+    endRemoveRows();
+
+    return true;
 }
 
 //returns a pointer to the "index"
