@@ -34,6 +34,7 @@ public:
     TreeNode *child(int row) const;
     int childCount() const;
     int columnCount() const;
+    bool setData(int column, const QVariant &value);
     QVariant data(int column) const;
     int row() const;
     TreeNode *parentNode() const;

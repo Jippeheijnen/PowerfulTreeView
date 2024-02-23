@@ -45,6 +45,11 @@ TreeModel::~TreeModel()
 
 static const char s_treeNodeMimeType[] = "application/x-treenode";
 
+bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+    auto node = nodeForIndex(index);
+    node->setData(index.column(), value);
+}
+
 QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())

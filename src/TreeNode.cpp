@@ -55,6 +55,14 @@ int TreeNode::columnCount() const
     return m_nodeData.count();
 }
 
+bool TreeNode::setData(int column, const QVariant &value) {
+    if (column < 0 || column >= m_nodeData.size())
+        return false;
+
+    m_nodeData[column] = value;
+    return true;
+}
+
 QVariant TreeNode::data(int column) const
 {
     return m_nodeData.value(column);
