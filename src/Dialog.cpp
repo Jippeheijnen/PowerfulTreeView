@@ -94,8 +94,7 @@ void Dialog::createGridGroupBox()
     auto *layout = new QGridLayout;
 
     treeView = new TreeView;
-    QStringList headers = {"Entry 1", "Entry 2", "Entry 3", "Entry 4"};
-    treeModel = new TreeModel(headers, {});
+    treeModel = new TreeModel({}, {});
 
     treeView->setDragEnabled(true);
     treeView->setAcceptDrops(true);
@@ -125,8 +124,70 @@ void Dialog::removeTreeItem() {
 
 void Dialog::save() {
     qDebug() << "Save pressed";
+
+    QJsonArray output;
+
+    // implement recursive save function
+    std::function<QJsonObject(TreeNode*)>  saveNodeRecursively;
+    saveNodeRecursively = [&saveNodeRecursively](TreeNode *node) ->QJsonObject {
+        QJsonArray output = {};
+        int childCounter = 0;
+        auto child = node->child(childCounter);
+        while (child) {
+            output.append(saveNodeRecursively(child));
+            childCounter++;
+            child = node->child(childCounter);
+        }
+
+        QJsonObject entryJsonObject;
+        entryJsonObject[node->data(0).toString()] = output;
+        return entryJsonObject;
+    };
+
+    auto rootNode = treeModel->getRootNode();
+    auto jsonOutput = saveNodeRecursively(rootNode);
+
+    // Save the JSON data to a file
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                    "./tree.json",
+                                                    tr("Tree structure (*.json)"));
+
+    QFile outputFile(filePath);
+    if (outputFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream outStream(&outputFile);
+        outStream << QJsonDocument(jsonOutput).toJson();
+        outputFile.close();
+    }
 }
 
 void Dialog::load() {
     qDebug() << "Load pressed";
+
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                            "./",
+                                            tr("Tree structure (*.json)"));
+
+    // Read JSON data from the file
+    QFile inputFile(filePath);
+    if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Error opening file for reading:" << inputFile.errorString();
+        return;
+    }
+
+    QByteArray jsonData = inputFile.readAll();
+    inputFile.close();
+
+    // Parse JSON data
+    auto jsonDoc = QJsonDocument::fromJson(jsonData);
+    auto * rootNode = new TreeNode({"root"}, 0);
+    treeModel->setRootNode(rootNode);
+    qDebug() << jsonDoc.object()["Root"];
+    QJsonArray testArray = jsonDoc.object()["Root"].toArray();
+    for (auto item : testArray) {
+        qDebug() << item;
+    }
+    for (auto node : jsonDoc.array()) {
+        qDebug() << node.toObject();
+    }
+
 }

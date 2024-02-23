@@ -47,6 +47,8 @@ public:
     bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
     bool insertNode(int row, const QModelIndex &parent = QModelIndex());
     bool removeNode(int row, const QModelIndex &parent = QModelIndex());
+    TreeNode * getRootNode() const;
+    void setRootNode(TreeNode * rootNode);
 private:
     TreeNode * nodeForIndex(const QModelIndex &index) const;
     void removeNode(TreeNode *node);

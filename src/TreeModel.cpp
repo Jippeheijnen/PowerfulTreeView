@@ -30,11 +30,8 @@ TreeModel::TreeModel(QStringList commodities, QObject *parent) : QAbstractItemMo
 
     QStringList data = commodities;
 
-//    for (int i = 1 ; i < commodities.size() ; ++i)
-//        data.push_back(commodities.at(i));
-
     QList<QVariant> rootData;
-    rootData << "Entries";
+    rootData << "root";
     m_rootNode = new TreeNode(rootData, 0);
     setupModelData(data, m_rootNode);
 }
@@ -236,6 +233,14 @@ bool TreeModel::removeNode(int row, const QModelIndex &parent) {
     endRemoveRows();
 
     return true;
+}
+
+TreeNode * TreeModel::getRootNode() const {
+    return this->m_rootNode;
+}
+
+void TreeModel::setRootNode(TreeNode * rootNode) {
+    this->m_rootNode = rootNode;
 }
 
 //returns a pointer to the "index"
