@@ -27,6 +27,8 @@ Created by Jippe Heijnen on 22-2-24.
 #include <QLabel>
 #include <QLineEdit>
 #include <QDialogButtonBox>
+#include "TreeView.hpp"
+#include "EditableTreeModel.hpp"
 
 class Dialog : public QDialog
 {
@@ -41,6 +43,13 @@ private:
     void createGridGroupBox();
     void createFormGroupBox();
 
+private slots:
+    void addTreeItem();
+    void removeTreeItem();
+    void moveTreeItemUp();
+    void moveTreeItemDown();
+
+private:
     enum { NumGridRows = 3, NumButtons = 4 };
 
     QMenuBar *menuBar;
@@ -51,8 +60,14 @@ private:
     QTextEdit *bigEditor;
     QLabel *labels[NumGridRows];
     QLineEdit *lineEdits[NumGridRows];
-    QPushButton *buttons[NumButtons];
+    QPushButton * addButton;
+    QPushButton * removeButton;
+    QPushButton * upButton;
+    QPushButton * downButton;
     QDialogButtonBox *buttonBox;
+
+    TreeView *treeView;
+    TreeModel *treeModel;
 
     QMenu *fileMenu;
     QAction *exitAction;

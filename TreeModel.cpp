@@ -25,18 +25,18 @@ Created by Jippe Heijnen on 13-2-24.
 #include <QIODevice>
 #include <QDataStream>
 
-TreeModel::TreeModel(QObject *parent) : QAbstractItemModel(parent)
+TreeModel::TreeModel(QStringList commodities, QObject *parent) : QAbstractItemModel(parent)
 {
 
-//    QStringList data = modalities;
+    QStringList data = commodities;
 
-//    for (int i = 1 ; i < modalities.size() ; ++i)
-//        data.push_back(QString::fromStdString(modalities.at(i)));
+//    for (int i = 1 ; i < commodities.size() ; ++i)
+//        data.push_back(commodities.at(i));
 
     QList<QVariant> rootData;
     rootData << "Levels";
     m_rootNode = new TreeNode(rootData, 0);
-//    setupModelData(data, m_rootNode);
+    setupModelData(data, m_rootNode);
 }
 TreeModel::~TreeModel()
 {
@@ -203,6 +203,10 @@ bool TreeModel::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, i
         ++row;
     }
     return true;
+}
+
+bool TreeModel::insertRows(int row, int count, const QModelIndex &parent) {
+
 }
 
 //returns a pointer to the "index"

@@ -17,6 +17,8 @@ Created by Jippe Heijnen on 22-2-24.
 */
 
 #include "Dialog.hpp"
+#include "TreeView.hpp"
+#include "TreeNode.hpp"
 #include <QtWidgets>
 
 Dialog::Dialog()
@@ -35,6 +37,11 @@ Dialog::Dialog()
 
     connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+
+    connect(addButton, &QPushButton::clicked, this, &Dialog::addTreeItem);
+    connect(removeButton, &QPushButton::clicked, this, &Dialog::removeTreeItem);
+    connect(upButton, &QPushButton::clicked, this, &Dialog::moveTreeItemUp);
+    connect(downButton, &QPushButton::clicked, this, &Dialog::moveTreeItemDown);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setMenuBar(menuBar);
@@ -78,32 +85,36 @@ void Dialog::createHorizontalGroupBox()
     horizontalGroupBox = new QGroupBox(tr("Horizontal layout"));
     QHBoxLayout *layout = new QHBoxLayout;
 
-    for (int i = 0; i < NumButtons; ++i) {
-        buttons[i] = new QPushButton(tr("Button %1").arg(i + 1));
-        layout->addWidget(buttons[i]);
-    }
+    addButton = new QPushButton(tr("Add"));
+    removeButton = new QPushButton(tr("Remove"));
+    upButton = new QPushButton(tr("Up"));
+    downButton = new QPushButton(tr("Down"));
+
+    layout->addWidget(addButton);
+    layout->addWidget(removeButton);
+    layout->addWidget(upButton);
+    layout->addWidget(downButton);
+
     horizontalGroupBox->setLayout(layout);
 }
 
 void Dialog::createGridGroupBox()
 {
     gridGroupBox = new QGroupBox(tr("Grid layout"));
-    QGridLayout *layout = new QGridLayout;
+    auto *layout = new QGridLayout;
 
-    for (int i = 0; i < NumGridRows; ++i) {
-        labels[i] = new QLabel(tr("Line %1:").arg(i + 1));
-        lineEdits[i] = new QLineEdit;
-        layout->addWidget(labels[i], i + 1, 0);
-        layout->addWidget(lineEdits[i], i + 1, 1);
-    }
+    treeView = new TreeView;
+    QStringList headers = {"Entry 1", "Entry 2", "Entry 3", "Entry 4"};
+    treeModel = new TreeModel(headers, {});
 
-    smallEditor = new QTextEdit;
-    smallEditor->setPlainText(tr("This widget takes up about two thirds of the "
-                                 "grid layout."));
-    layout->addWidget(smallEditor, 0, 2, 4, 1);
+    treeView->setDragEnabled(true);
+    treeView->setAcceptDrops(true);
+    treeView->setDragDropMode(QAbstractItemView::InternalMove);
+    treeView->setModel(treeModel);
+    treeView->setIndentation(20);
 
-    layout->setColumnStretch(1, 10);
-    layout->setColumnStretch(2, 20);
+    layout->addWidget(treeView, 0, 2, 4, 1);
+
     gridGroupBox->setLayout(layout);
 }
 
@@ -116,3 +127,45 @@ void Dialog::createFormGroupBox()
     layout->addRow(new QLabel(tr("Line 3:")), new QSpinBox);
     formGroupBox->setLayout(layout);
 }
+
+void Dialog::addTreeItem() {
+    qDebug() << "Add button pressed!";
+
+    const QModelIndex index = treeView->selectionModel()->currentIndex();
+    QAbstractItemModel *model = treeView->model();
+
+    if (model->columnCount(index) == 0) {
+        if (!model->insertColumn(0, index))
+            return;
+    }
+
+    if (!model->insertRow(0, index))
+        return;
+
+    for (int column = 0; column < model->columnCount(index); ++column) {
+        const QModelIndex child = model->index(0, column, index);
+        model->setData(child, QVariant(tr("[No data]")), Qt::EditRole);
+        if (!model->headerData(column, Qt::Horizontal).isValid())
+            model->setHeaderData(column, Qt::Horizontal, QVariant(tr("[No header]")), Qt::EditRole);
+    }
+
+    treeView->selectionModel()->setCurrentIndex(model->index(0, 0, index),
+                                            QItemSelectionModel::ClearAndSelect);
+
+}
+
+void Dialog::removeTreeItem() {
+    qDebug() << "Remove button pressed!";
+
+}
+
+void Dialog::moveTreeItemUp() {
+    qDebug() << "Up button pressed!";
+
+}
+
+void Dialog::moveTreeItemDown() {
+    qDebug() << "Down button pressed!";
+
+}
+

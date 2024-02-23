@@ -30,7 +30,7 @@ class TreeModel : public QAbstractItemModel
 Q_OBJECT
 
 public:
-    explicit TreeModel(QObject *parent = 0);
+    explicit TreeModel(QStringList commodities = {}, QObject *parent = 0);
     ~TreeModel();
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
@@ -45,7 +45,7 @@ public:
     QStringList mimeTypes() const Q_DECL_OVERRIDE;
     QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
     bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
-
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 private:
     TreeNode * nodeForIndex(const QModelIndex &index) const;
     void removeNode(TreeNode *node);

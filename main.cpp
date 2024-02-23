@@ -14,9 +14,7 @@ int main(int argc, char *argv[]) {
 
     Dialog * d = new Dialog;
 
-
-
-    // Show the view
+    // Show the d
     d->show();
 
     return app.exec();

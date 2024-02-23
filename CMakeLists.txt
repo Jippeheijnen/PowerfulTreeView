@@ -54,6 +54,8 @@ set(SOURCES
         TreeNode.cpp
         TreeView.cpp
         Dialog.cpp
+        EditableTreeModel.cpp
+        EditableTreeItem.cpp
 )
 
 # Define your project's header files
@@ -61,6 +63,9 @@ set(HEADERS
         TreeModel.cpp
         TreeNode.hpp
         TreeView.hpp
+        Dialog.hpp
+        EditableTreeModel.hpp
+        EditableTreeItem.hpp
 )
 
 # Define your project's forms
