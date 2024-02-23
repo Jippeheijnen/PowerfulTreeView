@@ -45,6 +45,9 @@ private:
 private slots:
     void addTreeItem();
     void removeTreeItem();
+    void save();
+    void load();
+
 
 private:
     QMenuBar *menuBar;
@@ -58,6 +61,8 @@ private:
     TreeModel *treeModel;
 
     QMenu *fileMenu;
+    QAction *saveAction;
+    QAction *loadAction;
     QAction *exitAction;
 };
 

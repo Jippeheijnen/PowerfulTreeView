@@ -64,10 +64,14 @@ void Dialog::createMenu()
     menuBar = new QMenuBar;
 
     fileMenu = new QMenu(tr("&File"), this);
+    saveAction = fileMenu->addAction(tr("&Save"));
+    loadAction = fileMenu->addAction(tr("&Load"));
     exitAction = fileMenu->addAction(tr("E&xit"));
     menuBar->addMenu(fileMenu);
 
     connect(exitAction, &QAction::triggered, this, &QDialog::accept);
+    connect(saveAction, &QAction::triggered, this, &Dialog::save);
+    connect(loadAction, &QAction::triggered, this, &Dialog::load);
 }
 
 void Dialog::createHorizontalGroupBox()
@@ -117,4 +121,12 @@ void Dialog::removeTreeItem() {
     auto m = treeModel;
     m->removeNode(index.row(), index.parent());
 
+}
+
+void Dialog::save() {
+    qDebug() << "Save pressed";
+}
+
+void Dialog::load() {
+    qDebug() << "Load pressed";
 }
