@@ -55,7 +55,7 @@ void TreeView::setModel(TreeModel *model)
 void TreeView::customContextMenuRequested(const QPoint &pos) {
     qDebug() << "Custom contextMenu requested at: " << pos;
 
-    auto d = new Dialog;
-    d->show();
+    // create your own context menu here...
+
 
 }
