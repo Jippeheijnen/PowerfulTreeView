@@ -106,13 +106,15 @@ void Dialog::createGridGroupBox()
 void Dialog::addTreeItem() {
     qDebug() << "Add button pressed!";
     const QModelIndex index = treeView->selectionModel()->currentIndex();
-    treeView->model()->insertRow(index.row()+1, index.parent());
+    auto m = treeModel;
+    m->insertNode(index.row()+1, index.parent());
 
 }
 
 void Dialog::removeTreeItem() {
     qDebug() << "Remove button pressed!";
     const QModelIndex index = treeView->selectionModel()->currentIndex();
-    treeView->model()->removeRow(index.row(), index.parent());
+    auto m = treeModel;
+    m->removeNode(index.row(), index.parent());
 
 }

@@ -47,12 +47,9 @@ private slots:
     void removeTreeItem();
 
 private:
-    enum { NumGridRows = 3, NumButtons = 4 };
-
     QMenuBar *menuBar;
     QGroupBox *horizontalGroupBox;
     QGroupBox *gridGroupBox;
-    QGroupBox *formGroupBox;
     QPushButton * addButton;
     QPushButton * removeButton;
     QDialogButtonBox *buttonBox;
