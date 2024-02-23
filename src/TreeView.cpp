@@ -18,6 +18,7 @@ Created by Jippe Heijnen on 13-2-24.
 
 #include "TreeView.hpp"
 #include "TreeModel.hpp"
+#include "Dialog.hpp"
 #include <QHeaderView>
 
 TreeView::TreeView(TreeModel *model)
@@ -34,8 +35,10 @@ TreeView::TreeView()
     resizeColumnToContents(0);
     resize(400, 500);
     setSelectionMode(QAbstractItemView::SingleSelection);
+    setContextMenuPolicy(Qt::CustomContextMenu);
     expandAll();
     connect(this, &QTreeView::pressed, this, &QTreeView::expandAll);
+    connect(this, &QTreeView::customContextMenuRequested, this, &TreeView::customContextMenuRequested);
     header()->setVisible(false);
     setIndentation(15);
 }
@@ -46,4 +49,11 @@ void TreeView::setModel(TreeModel *model)
     QItemSelectionModel *m = selectionModel();
     delete m;
     QTreeView::setModel(model);
+}
+
+void TreeView::customContextMenuRequested(const QPoint &pos) {
+    qDebug() << "Custom contextMenu requested at: " << pos;
+
+
+
 }

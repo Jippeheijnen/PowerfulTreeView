@@ -29,6 +29,8 @@ public:
     TreeView(TreeModel *model);
     TreeView();
     void setModel(TreeModel *model);
+private slots:
+    void customContextMenuRequested(const QPoint &pos);
 };
 
 #endif // TREEVIEW_H

@@ -1,6 +1,7 @@
 
 # Set the minimum required CMake version
 cmake_minimum_required(VERSION 3.19)
+
 # Define the project and its version
 project(treeViewTest VERSION 1.0)
 
@@ -50,22 +51,22 @@ set(CMAKE_AUTOUIC ON)
 # Define your project's source files
 set(SOURCES
         main.cpp
-        TreeModel.cpp
-        TreeNode.cpp
-        TreeView.cpp
-        Dialog.cpp
-        EditableTreeModel.cpp
-        EditableTreeItem.cpp
+        src/TreeModel.cpp
+        src/TreeNode.cpp
+        src/TreeView.cpp
+        src/Dialog.cpp
+        src/EditableTreeModel.cpp
+        src/EditableTreeItem.cpp
 )
 
 # Define your project's header files
 set(HEADERS
-        TreeModel.cpp
-        TreeNode.hpp
-        TreeView.hpp
-        Dialog.hpp
-        EditableTreeModel.hpp
-        EditableTreeItem.hpp
+        inc/TreeModel.hpp
+        inc/TreeNode.hpp
+        inc/TreeView.hpp
+        inc/Dialog.hpp
+        inc/EditableTreeModel.hpp
+        inc/EditableTreeItem.hpp
 )
 
 # Define your project's forms
@@ -79,11 +80,13 @@ set(FORMS
 
 #add_compile_options(-Wall -Wextra -Wno-sign-compare)
 
-qt_add_executable(treeViewTest ${SOURCES})
+qt_add_executable(treeViewTest ${HEADERS} ${SOURCES})
 
 # Include Qt include directories in the include path
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/inc
         ${CMAKE_CURRENT_SOURCE_DIR}/$$PWD
 )
 
