@@ -46,6 +46,7 @@ public:
     QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
     bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 private:
     TreeNode * nodeForIndex(const QModelIndex &index) const;
     void removeNode(TreeNode *node);

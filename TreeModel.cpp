@@ -219,6 +219,19 @@ bool TreeModel::insertRows(int row, int count, const QModelIndex &parent) {
 
 }
 
+bool TreeModel::removeRows(int row, int count, const QModelIndex &parent) {
+
+    TreeNode *parentItem = nodeForIndex(parent);
+    if (!parentItem)
+        return false;
+
+    beginRemoveRows(parent, row, row + count - 1);
+    parentItem->removeChild(row);
+    endRemoveRows();
+
+    return true;
+}
+
 //returns a pointer to the "index"
 TreeNode * TreeModel::nodeForIndex(const QModelIndex &index) const
 {

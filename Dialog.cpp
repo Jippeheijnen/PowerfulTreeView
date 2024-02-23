@@ -129,23 +129,15 @@ void Dialog::createFormGroupBox()
 
 void Dialog::addTreeItem() {
     qDebug() << "Add button pressed!";
-
     const QModelIndex index = treeView->selectionModel()->currentIndex();
-    QAbstractItemModel *model = treeView->model();
-
-//    if (model->columnCount(index) == 0) {
-//        if (!model->insertColumn(0, index))
-//            return;
-//    }
-
     treeView->model()->insertRow(index.row()+1, index.parent());
-//    treeView->selectionModel()->setCurrentIndex(model->index(0, 0, index),
-//                                            QItemSelectionModel::ClearAndSelect);
 
 }
 
 void Dialog::removeTreeItem() {
     qDebug() << "Remove button pressed!";
+    const QModelIndex index = treeView->selectionModel()->currentIndex();
+    treeView->model()->removeRow(index.row(), index.parent());
 
 }
 
