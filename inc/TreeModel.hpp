@@ -30,6 +30,7 @@ class TreeModel : public QAbstractItemModel
 Q_OBJECT
 
 public:
+    Q_DISABLE_COPY_MOVE(TreeModel)
     explicit TreeModel(QStringList commodities = {}, QObject *parent = 0);
     ~TreeModel();
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;

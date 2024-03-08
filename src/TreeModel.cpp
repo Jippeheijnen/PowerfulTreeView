@@ -30,9 +30,9 @@ TreeModel::TreeModel(QStringList commodities, QObject *parent) : QAbstractItemMo
 
     QStringList data = commodities;
 
-    QList<QVariant> rootData;
-    rootData << "root";
-    m_rootNode = new TreeNode(rootData, 0);
+    QList<QVariant> headerData;
+    headerData << "Scene entries";
+    m_rootNode = new TreeNode(headerData, 0);
     setupModelData(data, m_rootNode);
 }
 TreeModel::~TreeModel()
@@ -53,10 +53,17 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     if (role != Qt::DisplayRole &&
-        role != Qt::EditRole)
+        role != Qt::EditRole &&
+        role != Qt::UserRole)
         return QVariant();
 
     TreeNode *node = nodeForIndex(index);
+
+    // handle contentItem requests
+    if (role == Qt::UserRole) {
+        return node->data(Qt::UserRole);
+    }
+
     return node->data(index.column());
 }
 QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int role) const
