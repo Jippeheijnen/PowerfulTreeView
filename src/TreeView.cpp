@@ -21,6 +21,11 @@ Created by Jippe Heijnen on 13-2-24.
 #include "Dialog.hpp"
 #include <QHeaderView>
 
+TreeView::TreeView(QWidget *parent) {
+    this->setParent(parent);
+    TreeView();
+}
+
 TreeView::TreeView(TreeModel *model)
 {
     setModel(model);

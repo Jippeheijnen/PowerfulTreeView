@@ -26,6 +26,7 @@ Created by Jippe Heijnen on 13-2-24.
 class TreeView : public QTreeView
 {
 public:
+    TreeView(QWidget *parent);
     TreeView(TreeModel *model);
     TreeView();
     void setModel(TreeModel *model);
