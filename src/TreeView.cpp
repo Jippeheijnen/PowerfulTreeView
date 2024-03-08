@@ -23,7 +23,7 @@ Created by Jippe Heijnen on 13-2-24.
 
 TreeView::TreeView(QWidget *parent) {
     this->setParent(parent);
-    TreeView();
+    TreeView(new TreeModel());
 }
 
 TreeView::TreeView(TreeModel *model)
