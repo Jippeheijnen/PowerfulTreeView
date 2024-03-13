@@ -50,12 +50,12 @@ public:
     bool removeNode(int row, const QModelIndex &parent = QModelIndex());
     TreeNode * getRootNode() const;
     void setRootNode(TreeNode * rootNode);
-private:
     TreeNode * nodeForIndex(const QModelIndex &index) const;
+private:
     void removeNode(TreeNode *node);
     void setupModelData(const QStringList &lines, TreeNode *parent);
 
-    TreeNode *m_rootNode;
+    TreeNode * m_rootNode;
 };
 
 #endif // TREEMODEL_H

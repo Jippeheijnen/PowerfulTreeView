@@ -40,12 +40,10 @@ public:
     int row() const;
     TreeNode *parentNode() const;
     void insertChild(int pos, TreeNode *child);
-
-private:
-    bool isRoot;
-    QList<TreeNode*> m_childNodes;
-    QList<QVariant> m_nodeData;
     TreeNode *m_parentNode;
+    QList<TreeNode*> m_childNodes;
+private:
+    QList<QVariant> m_nodeData;
     ContentItem *contentItem;
 };
 
