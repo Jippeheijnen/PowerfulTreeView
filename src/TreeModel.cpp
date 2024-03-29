@@ -44,7 +44,14 @@ static const char s_treeNodeMimeType[] = "application/x-treenode";
 
 bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     auto node = nodeForIndex(index);
-    node->setData(index.column(), value);
+
+    switch (role) {
+        case Qt::DecorationRole:
+            node->icon = value.value<QPixmap>();
+            break;
+        default:
+            node->setData(index.column(), value);
+    }
 }
 
 QVariant TreeModel::data(const QModelIndex &index, int role) const
@@ -53,18 +60,22 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     if (role != Qt::DisplayRole &&
+        role != Qt::DecorationRole &&
         role != Qt::EditRole &&
         role != Qt::UserRole)
         return QVariant();
 
     TreeNode *node = nodeForIndex(index);
 
-    // handle contentItem requests
-    if (role == Qt::UserRole) {
-        return node->data(Qt::UserRole);
+    switch (role) {
+        case Qt::UserRole:
+            return node->data(Qt::UserRole);
+            break;
+        case Qt::DecorationRole:
+            return node->icon;
+        default:
+            return node->data(index.column());
     }
-
-    return node->data(index.column());
 }
 QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {

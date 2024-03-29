@@ -42,6 +42,7 @@ public:
     void insertChild(int pos, TreeNode *child);
     TreeNode *m_parentNode;
     QList<TreeNode*> m_childNodes;
+    QPixmap icon;
 private:
     QList<QVariant> m_nodeData;
     ContentItem *contentItem;
