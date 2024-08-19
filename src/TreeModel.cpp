@@ -24,6 +24,7 @@ Created by Jippe Heijnen on 13-2-24.
 #include <QMimeData>
 #include <QIODevice>
 #include <QDataStream>
+#include <QString>
 
 TreeModel::TreeModel(QStringList commodities, QObject *parent) : QAbstractItemModel(parent)
 {
@@ -37,6 +38,7 @@ TreeModel::TreeModel(QStringList commodities, QObject *parent) : QAbstractItemMo
 }
 TreeModel::~TreeModel()
 {
+    qDebug() << "ending the TreeModel";
     delete m_rootNode;
 }
 
@@ -48,6 +50,9 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
     switch (role) {
         case Qt::DecorationRole:
             node->icon = value.value<QPixmap>();
+            break;
+        case Qt::EditRole:
+            onRenameNode(index, nodeForIndex(index)->data(Qt::DisplayRole), value);
             break;
         default:
             node->setData(index.column(), value);
@@ -73,6 +78,8 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
             break;
         case Qt::DecorationRole:
             return node->icon;
+        case Qt::EditRole:
+            return node->data(index.column());
         default:
             return node->data(index.column());
     }
@@ -277,6 +284,48 @@ void TreeModel::removeNode(TreeNode *node)
     node->parentNode()->removeChild(row);
     endRemoveRows();
 }
+void TreeModel::onRenameNode(const QModelIndex &index, const QVariant &nCurrent, const QVariant &nNew) {
+
+    // todo: Traverse through contentTree and check whether links to this entry should be changed.
+
+    qDebug() << "New name:" << nCurrent.toString();
+
+
+
+    std::function<int(TreeNode *, QString)> countNameOccurrences;
+    countNameOccurrences = [&](TreeNode *root, QString name) {
+        if (root == nullptr) return 0;
+
+        int count = 0;
+        if (root->data(Qt::DisplayRole).toString() == name) {
+            count = 1;
+        }
+
+        for (TreeNode *child : root->m_childNodes) {
+            count += countNameOccurrences(child, name);
+        }
+
+        return count;
+    };
+
+    auto nameCount = 0;
+
+    if (nCurrent.toString() == nNew.toString()) {
+        // names are identical, do nothing
+        return;
+    } else {
+        nameCount = countNameOccurrences(m_rootNode, nNew.toString());
+    }
+
+
+    if (nameCount > 0) {
+        qDebug() << "Name already exists";
+        emit rowNameIsNotUnique(index, nNew, nameCount);
+    } else {
+        qDebug() << "Name is unique";
+        emit rowNameIsUnique(index, nNew);
+    }
+}
 void TreeModel::setupModelData(const QStringList &lines, TreeNode *parent)
 {
     QList<TreeNode*> parents;
@@ -324,4 +373,21 @@ void TreeModel::setupModelData(const QStringList &lines, TreeNode *parent)
 
         ++number;
     }
+}
+
+void TreeModel::onRowNameIsUnique(const QModelIndex &index, const QVariant &value) {
+    nodeForIndex(index)->setData(index.column(), value);
+}
+
+void TreeModel::onRowNameIsNotUnique(const QModelIndex &index, const QVariant &value, const int count) {
+    auto new_name = value.toString();
+    auto iter = 0;
+
+    iter = new_name.split("_").last().toInt();
+    new_name = new_name.split("_").first();
+
+    new_name += "_";
+    new_name += QString::number(iter + count);
+
+    onRenameNode(index, value.toString(), new_name);
 }
