@@ -30,6 +30,7 @@ class TreeModel : public QAbstractItemModel
 Q_OBJECT
 
 public:
+    Q_DISABLE_COPY_MOVE(TreeModel)
     explicit TreeModel(QStringList commodities = {}, QObject *parent = 0);
     ~TreeModel();
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
@@ -49,12 +50,21 @@ public:
     bool removeNode(int row, const QModelIndex &parent = QModelIndex());
     TreeNode * getRootNode() const;
     void setRootNode(TreeNode * rootNode);
-private:
     TreeNode * nodeForIndex(const QModelIndex &index) const;
-    void removeNode(TreeNode *node);
-    void setupModelData(const QStringList &lines, TreeNode *parent);
 
-    TreeNode *m_rootNode;
+signals:
+    void rowNameIsUnique(const QModelIndex &index, const QVariant &value);
+    void rowNameIsNotUnique(const QModelIndex &index, const QVariant &value, const int count);
+
+private:
+    void removeNode(TreeNode *node);
+    void onRenameNode(const QModelIndex &index, const QVariant &nCurrent, const QVariant &nNew);
+    void setupModelData(const QStringList &lines, TreeNode *parent);
+    TreeNode * m_rootNode;
+
+public slots:
+    void onRowNameIsUnique(const QModelIndex &index, const QVariant &value);
+    void onRowNameIsNotUnique(const QModelIndex &index, const QVariant &value, const int count);
 };
 
 #endif // TREEMODEL_H

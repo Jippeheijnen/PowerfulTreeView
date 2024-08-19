@@ -23,10 +23,18 @@ Created by Jippe Heijnen on 13-2-24.
 TreeNode::TreeNode(const QList<QVariant> &data, TreeNode *parent)
         : m_nodeData(data), m_parentNode(parent)
 {
+    // only add content for non-root nodes.
+    if (parent != nullptr) {
+        contentItem = new ContentItem();
+        contentItem->setName(this->data(0).toString());
+        setData(Qt::UserRole, QVariant::fromValue(static_cast<void*>(contentItem)));
+    }
 }
 
 TreeNode::~TreeNode()
 {
+    // remove the contentItem as well
+    delete contentItem;
     qDeleteAll(m_childNodes);
 }
 
@@ -56,6 +64,15 @@ int TreeNode::columnCount() const
 }
 
 bool TreeNode::setData(int column, const QVariant &value) {
+    if (column == Qt::UserRole) {
+        contentItem = static_cast<ContentItem*>(value.value<void*>());
+        return true;
+    }
+    // change contentItem name when changing the node name
+    if (column == 0) {
+        contentItem->setName(value.toString());
+    }
+
     if (column < 0 || column >= m_nodeData.size())
         return false;
 
@@ -65,6 +82,10 @@ bool TreeNode::setData(int column, const QVariant &value) {
 
 QVariant TreeNode::data(int column) const
 {
+    // handle the contentItem request
+    if (column == Qt::UserRole) {
+        return QVariant::fromValue(static_cast<void*>(contentItem));
+    }
     return m_nodeData.value(column);
 }
 

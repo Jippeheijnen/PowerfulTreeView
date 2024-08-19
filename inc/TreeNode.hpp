@@ -21,6 +21,7 @@ Created by Jippe Heijnen on 13-2-24.
 
 #include <QList>
 #include <QVariant>
+#include "structure.h"
 
 class TreeNode
 {
@@ -39,11 +40,12 @@ public:
     int row() const;
     TreeNode *parentNode() const;
     void insertChild(int pos, TreeNode *child);
-
-private:
-    QList<TreeNode*> m_childNodes;
-    QList<QVariant> m_nodeData;
     TreeNode *m_parentNode;
+    QList<TreeNode*> m_childNodes;
+    QPixmap icon;
+private:
+    QList<QVariant> m_nodeData;
+    ContentItem *contentItem;
 };
 
 #endif // TREENODE_H
