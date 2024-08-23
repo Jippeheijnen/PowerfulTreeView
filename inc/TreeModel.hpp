@@ -53,17 +53,18 @@ public:
     TreeNode * nodeForIndex(const QModelIndex &index) const;
 
 signals:
-    void rowNameIsUnique(const QModelIndex &index, const QVariant &value);
+    void rowNameIsUnique(const QModelIndex &index, const QVariant &nCurrent, const QVariant &nNew);
     void rowNameIsNotUnique(const QModelIndex &index, const QVariant &value, const int count);
 
 private:
     void removeNode(TreeNode *node);
     void onRenameNode(const QModelIndex &index, const QVariant &nCurrent, const QVariant &nNew);
     void setupModelData(const QStringList &lines, TreeNode *parent);
+    void checkTreeForRenames(const TreeNode *rootNode, const QVariant &nCurrent, const QVariant &nNew);
     TreeNode * m_rootNode;
 
 public slots:
-    void onRowNameIsUnique(const QModelIndex &index, const QVariant &value);
+    void onRowNameIsUnique(const QModelIndex &index, const QVariant &nCurrent, const QVariant &nNew);
     void onRowNameIsNotUnique(const QModelIndex &index, const QVariant &value, const int count);
 };
 

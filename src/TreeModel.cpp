@@ -25,6 +25,8 @@ Created by Jippe Heijnen on 13-2-24.
 #include <QIODevice>
 #include <QDataStream>
 #include <QString>
+#include <QPointer>
+#include "structure.h"
 
 TreeModel::TreeModel(QStringList commodities, QObject *parent) : QAbstractItemModel(parent)
 {
@@ -286,12 +288,6 @@ void TreeModel::removeNode(TreeNode *node)
 }
 void TreeModel::onRenameNode(const QModelIndex &index, const QVariant &nCurrent, const QVariant &nNew) {
 
-    // todo: Traverse through contentTree and check whether links to this entry should be changed.
-
-    qDebug() << "New name:" << nCurrent.toString();
-
-
-
     std::function<int(TreeNode *, QString)> countNameOccurrences;
     countNameOccurrences = [&](TreeNode *root, QString name) {
         if (root == nullptr) return 0;
@@ -319,11 +315,9 @@ void TreeModel::onRenameNode(const QModelIndex &index, const QVariant &nCurrent,
 
 
     if (nameCount > 0) {
-        qDebug() << "Name already exists";
         emit rowNameIsNotUnique(index, nNew, nameCount);
     } else {
-        qDebug() << "Name is unique";
-        emit rowNameIsUnique(index, nNew);
+        emit rowNameIsUnique(index, nCurrent, nNew);
     }
 }
 void TreeModel::setupModelData(const QStringList &lines, TreeNode *parent)
@@ -375,8 +369,31 @@ void TreeModel::setupModelData(const QStringList &lines, TreeNode *parent)
     }
 }
 
-void TreeModel::onRowNameIsUnique(const QModelIndex &index, const QVariant &value) {
-    nodeForIndex(index)->setData(index.column(), value);
+void TreeModel::checkTreeForRenames(const TreeNode *rootNode, const QVariant &nCurrent, const QVariant &nNew) {
+    if (rootNode == nullptr) {
+        return;
+    }
+
+    if (rootNode->data(Qt::UserRole).isValid()) {
+        for (auto interaction: static_cast<ContentItem *>(rootNode->data(Qt::UserRole).value<void *>())->getInteractionItems()) {
+            if (interaction->name == nCurrent.toString()) {
+                interaction->name = nNew.toString();
+            }
+        }
+    }
+
+    for (auto child : rootNode->m_childNodes) {
+        checkTreeForRenames(child, nCurrent, nNew);
+    }
+
+}
+
+void TreeModel::onRowNameIsUnique(const QModelIndex &index, const QVariant &nCurrent, const QVariant &nNew) {
+    nodeForIndex(index)->setData(index.column(), nNew);
+
+    // also check the whole tree for interactions that should be renamed.
+    for (auto child : m_rootNode->m_childNodes)
+    checkTreeForRenames(child, nCurrent, nNew);
 }
 
 void TreeModel::onRowNameIsNotUnique(const QModelIndex &index, const QVariant &value, const int count) {
