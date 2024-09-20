@@ -52,12 +52,12 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
     switch (role) {
         case Qt::DecorationRole:
             node->icon = value.value<QPixmap>();
-            break;
+            return true;
         case Qt::EditRole:
             onRenameNode(index, nodeForIndex(index)->data(Qt::DisplayRole), value);
-            break;
+            return true;
         default:
-            node->setData(index.column(), value);
+            return node->setData(index.column(), value);
     }
 }
 
